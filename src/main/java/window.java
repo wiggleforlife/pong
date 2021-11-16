@@ -22,7 +22,9 @@ public class window {
         while(!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             
-	    getInput(window);
+	        getInput(window);
+            checkPongHit();
+            updatePongPos();
 	     
             glClearColor(0f, 0f,0f, 1f);
 
@@ -53,12 +55,12 @@ public class window {
                 glVertex2f(-0.94f, vertPos[1]);
             glEnd();
 
-	    glBegin(GL_QUADS);
-	    	glVertex2f(pongPos[0], pongPos[2]);
-		glVertex2f(pongPos[1], pongPos[2]);
-		glVertex2f(pongPos[1], pongPos[3]);
-		glVertex2f(pongPos[0], pongPos[3]);
-	    glEnd();
+            glBegin(GL_QUADS);
+	        	glVertex2f(pongPos[0], pongPos[2]);
+		        glVertex2f(pongPos[1], pongPos[2]);
+		        glVertex2f(pongPos[1], pongPos[3]);
+		        glVertex2f(pongPos[0], pongPos[3]);
+	        glEnd();
 
             glfwSwapBuffers(window);
         }
@@ -81,24 +83,43 @@ public class window {
         }
     }
 
+    void checkPongHit() {
+        if (pongPos[1] < -0.94f && pongPos[1] > -0.95f) {
+            pongHit = true;
+            updatePong();
+        } else if (pongPos[0] > 0.94f && pongPos[0] < 0.95f) {
+            updatePong();
+        }
+    }
+
+    void updatePongPos() {
+        if (pongDir == false) {
+            pongPos[0] -= 0.02f;
+            pongPos[1] -= 0.02f;
+        } else {
+            pongPos[0] += 0.02f;
+            pongPos[1] += 0.02f;
+        }
+    }
+
     void updatePong() {
     	if (pongHit) {
-	    if (pongDir = true) {
-		    pongDir = false;
+            if (pongDir == true) {
+		        pongDir = false;
+	        } else {
+		        pongDir = true;
+	        }
+	        pongHit = false;
 	    } else {
-		    pongDir = true;
+	        if (pongDir == true) {
+                poneScore++;
+		        pongDir = false;
+	        } else {
+                ptwoScore++;
+                pongDir = true;
+            }
+	        System.out.println("Miss (P1 - " + poneScore + ", P2 - " + ptwoScore + ")");
 	    }
-	    pongHit = false;
-	} else {
-	    if (pongDir = true {
-		    ptwoScore++;
-		    pongDir = false;
-	    } else {
-		    poneScore++;
-		    pongDir = true;
-	    }
-	    System.out.println("P1 - " + poneScore + "\nP2 - " + ptwoScore;
-	}
     }
 
     public static void main(String[] args) {
